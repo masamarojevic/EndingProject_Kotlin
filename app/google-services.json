@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "182009353369",
+    "project_id": "horoscope-f10af",
+    "storage_bucket": "horoscope-f10af.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:182009353369:android:ca0afecf9196668a961408",
+        "android_client_info": {
+          "package_name": "com.example.endingproject_kotlin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "182009353369-73gestb3ob79rf9ved0bom792nc69r18.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJWov9BGVXV5i47JsqCMqfkMNK1IAMmAE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "182009353369-73gestb3ob79rf9ved0bom792nc69r18.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
