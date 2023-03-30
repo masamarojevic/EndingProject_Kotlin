@@ -45,14 +45,16 @@ class RegisterFragment : Fragment() {
             val password = etPassword.text.toString()
             val rePassword = etRePassword.text.toString()
             val newUser = User(username,password)
+            //todo - check if username and pass already exist before pushing it to db
             if (password == rePassword){
              db.push().setValue(newUser).addOnSuccessListener {
                  Toast.makeText(activity,"$newUser has been registered successfully",Toast.LENGTH_LONG).show()
              }.addOnFailureListener {
-                 Toast.makeText(activity,"Password not matching,try again",Toast.LENGTH_LONG).show()
+                 Toast.makeText(activity,"Something went wrong, try again!",Toast.LENGTH_LONG).show()
              }
 
-
+            }else{
+                Toast.makeText(activity,"Password not matching, try again!",Toast.LENGTH_LONG).show()
             }
 
         }
