@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.navigation.Navigation
 import com.example.endingproject_kotlin.databinding.FragmentRegisterBinding
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -38,6 +39,7 @@ class RegisterFragment : Fragment() {
         val etPassword = binding.etRegPassword
         val etRePassword = binding.etRegRePassword
         val btnRegister = binding.btnRegister
+        val btnNavLogIn = binding.btnNavLogIn
 
 
         btnRegister.setOnClickListener {
@@ -58,9 +60,14 @@ class RegisterFragment : Fragment() {
             }
 
         }
+        btnNavLogIn.setOnClickListener {
+            Navigation.findNavController(view).navigate(R.id.action_registerFragment_to_logginFragment2)
+        }
 
         return view
     }
 
 
 }
+
+

@@ -8,9 +8,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.Navigation
 import com.example.endingproject_kotlin.databinding.FragmentLogginBinding
-import com.example.endingproject_kotlin.databinding.FragmentRegisterBinding
+
 import com.google.firebase.database.*
-import com.google.firebase.database.ktx.getValue
+
 
 
 class LogginFragment : Fragment() {
@@ -52,7 +52,7 @@ class LogginFragment : Fragment() {
                         for (userSnapshot in snapshot.children){
                             val user = userSnapshot.getValue(User::class.java)
                             if (user != null && user.password == inputPassword){
-                               //todo navigate to new fragment
+                               Navigation.findNavController(view).navigate(R.id.action_logginFragment_to_mainPageFragment)
                             }else{
                                 Toast.makeText(activity,"wrong username or password,try again",Toast.LENGTH_LONG).show()
                             }
@@ -70,6 +70,7 @@ class LogginFragment : Fragment() {
         btnReg.setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.action_logginFragment_to_registerFragment)
         }
+
 
 
         return view
