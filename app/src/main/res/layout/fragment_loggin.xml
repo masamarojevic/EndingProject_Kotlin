@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/untitled_design_6"
     tools:context=".LogginFragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -12,53 +13,92 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <EditText
-            android:id="@+id/et_username"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="Enter username"
-            app:layout_constraintBottom_toTopOf="@+id/et_userPassword"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.841" />
 
         <EditText
-            android:id="@+id/et_userPassword"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="252dp"
+
+            android:id="@+id/et_username"
+            android:layout_width="240dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="124dp"
+            android:background="@drawable/radiusbutton"
+            android:backgroundTint="#2DEDE5E5"
+            android:backgroundTintMode="add"
+            android:breakStrategy="simple"
             android:ems="10"
-            android:hint="Enter password"
-            android:inputType="textPassword"
+            android:fontFamily="@font/gabriela"
+            android:hint="Enter username"
+            android:includeFontPadding="true"
+            android:inputType="textPersonName"
+            android:paddingStart="40dp"
+            android:singleLine="false"
+            android:textAllCaps="false"
+            android:textColor="#FDFCFC"
+            android:textColorHighlight="#040303"
+            android:textColorHint="#090707"
+            android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/btn_logIn"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.664"
+            tools:ignore="RtlSymmetry" />
+
+        <EditText
+            android:id="@+id/et_userPassword"
+            android:layout_width="240dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="44dp"
+            android:background="@drawable/radiusbutton"
+            android:backgroundTint="#2DEDE5E5"
+            android:backgroundTintMode="add"
+            android:ems="10"
+            android:fontFamily="@font/gabriela"
+            android:hint="Enter password"
+            android:inputType="textPassword"
+            android:paddingStart="50dp"
+            android:textColorHighlight="#FAF8F8"
+            android:textColorHint="#070606"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/et_username"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.834"
+            tools:ignore="RtlSymmetry" />
 
         <Button
             android:id="@+id/btn_logIn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="216dp"
+            android:background="@drawable/radiusbutton"
+            android:backgroundTint="#2E2727"
+            android:fontFamily="@font/gabriela"
             android:text="log in"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/btn_UserRegister"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.879" />
+
+        <Button
+
+            android:id="@+id/btn_UserRegister"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="512dp"
+            android:background="@drawable/radiusbutton"
+            android:backgroundTint="#2C2929"
+            android:fontFamily="@font/gabriela"
+            android:text="Register"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/btn_UserRegister"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Register"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_logIn"
-            app:layout_constraintVertical_bias="0.044" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
