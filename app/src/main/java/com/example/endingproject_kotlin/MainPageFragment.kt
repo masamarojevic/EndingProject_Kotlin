@@ -8,20 +8,23 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.Navigation
 import com.example.endingproject_kotlin.ProfilePix.ProfilePixViewModel
+import com.example.endingproject_kotlin.Username.UserNameViewModel
 import com.example.endingproject_kotlin.databinding.FragmentLogginBinding
 
 import com.example.endingproject_kotlin.databinding.FragmentMainPageBinding
-import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -30,6 +33,7 @@ class MainPageFragment : Fragment() {
     private var _binding: FragmentMainPageBinding?=null
     private val binding get() = _binding!!
     private lateinit var db : DatabaseReference
+
 
 
 
@@ -44,8 +48,10 @@ class MainPageFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentMainPageBinding.inflate(layoutInflater, container, false)
+       val viewModel1: UserNameViewModel by activityViewModels()
 
+
+        _binding = FragmentMainPageBinding.inflate(layoutInflater, container, false)
         val view = binding.root
 
         //activityViewModels used for sharing the viewmodel
@@ -53,11 +59,25 @@ class MainPageFragment : Fragment() {
 
         //id
         var profilPicture = binding.ibSelectProfilePix
+        var displayName = binding.tvDisplayText
 
-        //livedata to observe the change od data - observe in this case the default profile picture
-        viewModel.profilePixState.observe(viewLifecycleOwner) { state ->
-            profilPicture.setImageResource(state.defaultPix)
+
+        //lifecycleScope for displaying the username
+        lifecycleScope.launch {
+            viewModel1.usernameUiState.collect { state ->
+                displayName.text = state.username
+            }
         }
+
+
+
+       //lifecycleScope for changing the profile Picture
+      lifecycleScope.launch {
+          viewModel.profilePixState.collect(){
+              state -> profilPicture.setImageResource(state.defaultPix)
+          }
+      }
+
 
         // open another fragment
         profilPicture.setOnClickListener {
@@ -66,8 +86,12 @@ class MainPageFragment : Fragment() {
         }
 
 
+
+
+
         return view
     }
+
 
     }
 

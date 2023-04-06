@@ -1,14 +1,11 @@
 package com.example.endingproject_kotlin
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import com.example.endingproject_kotlin.ProfilePix.ProfilePixViewModel
 import com.example.endingproject_kotlin.databinding.FragmentProfileIconsBinding
@@ -37,14 +34,23 @@ class ProfileIconsFragment : Fragment() {
         //id
 
         val profilePicTwo=binding.ibChoiceTwo
+        val profilePicOne=binding.ibChoiseOne
+        val profilePicThree=binding.ibChoiceThree
 
         val cancelButton=binding.iconCancel
 
 
         //update the new image for profile picture
         profilePicTwo.setOnClickListener {
-            viewModel.updateProfilePicture(R.drawable.circle_2)
+            viewModel.updateProfilePicture(R.drawable.circle_two)
         }
+        profilePicOne.setOnClickListener {
+            viewModel.updateProfilePicture(R.drawable.circle_one)
+        }
+        profilePicThree.setOnClickListener {
+            viewModel.updateProfilePicture(R.drawable.circle_three)
+        }
+
 
 
        //go back to the main page
