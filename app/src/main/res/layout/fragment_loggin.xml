@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/untitled_design_6"
+
     tools:context=".LogginFragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -31,7 +32,7 @@
             android:paddingStart="40dp"
             android:singleLine="false"
             android:textAllCaps="false"
-            android:textColor="#FDFCFC"
+            android:textColor="#050505"
             android:textColorHighlight="#040303"
             android:textColorHint="#090707"
             android:textSize="20sp"

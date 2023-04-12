@@ -56,6 +56,13 @@ class MainPageFragment : Fragment() {
 
         val viewModelZodiac: ZodiacSignViewModel by viewModels()
 
+
+        //id
+        db= FirebaseDatabase.
+        getInstance("https://horoscope-f10af-default-rtdb.europe-west1.firebasedatabase.app")
+            .getReference("users")
+            .child("zodiac-sign")
+
         //id
         var profilPicture = binding.ibSelectProfilePix
         var displayName = binding.tvDisplayText
@@ -65,11 +72,22 @@ class MainPageFragment : Fragment() {
         var btnSubmit = binding.btnSubmit
         var displaySign = binding.tvZodiacSign
 
+
+
         btnSubmit.setOnClickListener {
+
+
 
                var zodiacSign
                = calculateZodiac(monthInput,dayInput)
           viewModelZodiac.setZodiacSign(zodiacSign)
+
+            db.push().setValue(zodiacSign).addOnSuccessListener {
+                Toast.makeText(activity,"$zodiacSign has been added successfully",Toast.LENGTH_LONG).show()
+            }
+                .addOnFailureListener {
+                    Toast.makeText(activity,"something went wrong",Toast.LENGTH_LONG).show()
+                }
         }
 
 

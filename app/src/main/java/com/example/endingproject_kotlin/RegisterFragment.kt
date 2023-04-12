@@ -34,6 +34,8 @@ class RegisterFragment : Fragment() {
 
             .getInstance("https://horoscope-f10af-default-rtdb.europe-west1.firebasedatabase.app")
             .getReference("users")
+            .child("zodiac-sign")
+
         val etUsername = binding.etRegUsername
         val etPassword = binding.etRegPassword
         val etRePassword = binding.etRegRePassword

@@ -42,6 +42,8 @@ class LogginFragment : Fragment() {
         db= FirebaseDatabase.
         getInstance("https://horoscope-f10af-default-rtdb.europe-west1.firebasedatabase.app")
             .getReference("users")
+
+
         var username = binding.etUsername
         val password = binding.etUserPassword
         val btnLog = binding.btnLogIn
