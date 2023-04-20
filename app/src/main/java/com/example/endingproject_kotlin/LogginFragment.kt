@@ -7,10 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
-import com.example.endingproject_kotlin.CurrentUser.UserViewModel
-import com.example.endingproject_kotlin.Username.UserNameViewModel
+import com.example.endingproject_kotlin.SharedViewModel.SharedViewModel
 import com.example.endingproject_kotlin.databinding.FragmentLogginBinding
 import com.google.firebase.database.*
 
@@ -34,8 +32,7 @@ class LogginFragment : Fragment() {
         _binding = FragmentLogginBinding.inflate(layoutInflater, container, false)
         val view = binding.root
 
-        val viewModel1: UserNameViewModel by activityViewModels()
-        val userViewModel: UserViewModel by activityViewModels()
+        val sharedViewModel: SharedViewModel by activityViewModels()
 
 
         db= FirebaseDatabase.
@@ -80,9 +77,9 @@ class LogginFragment : Fragment() {
                                         userId = it1
                                     )
                                 }
-                               userViewModel.getCurrentUser(currentUser)
+                               sharedViewModel.getCurrentUser(currentUser)
 
-                               viewModel1.setUsername(user.username)
+                               sharedViewModel.setUsername(user.username)
 
                                 Navigation.findNavController(view).navigate(R.id.action_logginFragment_to_mainPageFragment)
 

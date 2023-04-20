@@ -8,16 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import com.example.endingproject_kotlin.Api.DailyTextApi
 import com.example.endingproject_kotlin.Api.Dailytext
-import com.example.endingproject_kotlin.CurrentUser.UserViewModel
-import com.example.endingproject_kotlin.ProfilePix.ProfilePixViewModel
-import com.example.endingproject_kotlin.ZodiacSign.ZodiacSignViewModel
+import com.example.endingproject_kotlin.SharedViewModel.SharedViewModel
 import com.example.endingproject_kotlin.databinding.FragmentMainPageBinding
 import com.google.firebase.database.*
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
@@ -41,13 +39,19 @@ class MainPageFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val sharedViewModel:SharedViewModel by activityViewModels()
+
+        if (!sharedViewModel.quoteFetched.value){
+            sharedViewModel.fetchRandomQuote()
+            sharedViewModel.setQuoteFetchedStatus(true)
+        }
 
         _binding = FragmentMainPageBinding.inflate(layoutInflater, container, false)
         val view = binding.root
 
-        val userViewModel :UserViewModel by activityViewModels()
-        val viewModel: ProfilePixViewModel by activityViewModels()
-        val viewModelZodiac: ZodiacSignViewModel by viewModels()
+
+
+
 
 
 
@@ -69,7 +73,7 @@ class MainPageFragment : Fragment() {
         //updating the zodiac sign
         btnSubmit.setOnClickListener {
 
-             val currentUser = userViewModel.currentUser.value
+             val currentUser = sharedViewModel.currentUser.value
              val updatedZodiacSign = calculateZodiac(monthInput,dayInput)
              val updatedTraits = calculateTraits(updatedZodiacSign)
 
@@ -79,14 +83,14 @@ class MainPageFragment : Fragment() {
 
                  //retrieve the current user ID for entering the specific path to which user , when currentUser is found
                  //we updated that user in database with setValue
-                 val currentUserId = userViewModel.currentUserId.value
+                 val currentUserId = sharedViewModel.currentUserId.value
                  if (currentUserId != null) {
                      FirebaseDatabase.getInstance("https://horoscope-f10af-default-rtdb.europe-west1.firebasedatabase.app")
                          .getReference("users").child(currentUserId).setValue(updatedUser)
                          .addOnSuccessListener {  println("updated")  }.addOnFailureListener { println("failed") }
                  }
 
-                viewModelZodiac.setZodiacSign(updatedZodiacSign)
+                sharedViewModel.setZodiacSign(updatedZodiacSign)
 
                //the zodiac with traits for the updated zodiacsign, when non of it is matching return empty list
                 when(updatedZodiacSign){
@@ -118,36 +122,12 @@ class MainPageFragment : Fragment() {
 
            }
 
-        //api
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://zenquotes.io/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
 
-        val randomQuote =retrofit.create<DailyTextApi>().getInfo()
-        randomQuote.enqueue(object : Callback<Dailytext>{
-            override fun onResponse(call: Call<Dailytext>, response: Response<Dailytext>) {
-              if(response.isSuccessful){
-                  val dailytext =response.body()
-                  if (dailytext != null && dailytext.isNotEmpty()) {
-                      val randomQuote = dailytext.random()
-                      displayTextapi.text = randomQuote.q
-                  }
-              }else{
-                  println("error")
-              }
-            }
-
-            override fun onFailure(call: Call<Dailytext>, t: Throwable) {
-                //print out error todo: toast 404 not found
-                println(t.printStackTrace())
-            }
-        })
 
 
         //lifescope for displaying the current users username
         lifecycleScope.launch{
-            userViewModel.currentUser.collect{
+            sharedViewModel.currentUser.collect{
                 currentUser ->
                 if (currentUser != null ){
                     val username = currentUser.username
@@ -158,18 +138,28 @@ class MainPageFragment : Fragment() {
 
       //lifescope for displaying zodiac sign
        lifecycleScope.launch{
-           viewModelZodiac.zodiacSignUistate.collect{
-               state -> displaySign.text = state.zodiacSign
+          sharedViewModel.zodiacSign.collect{
+               state -> displaySign.text = state
            }
        }
 
 
        //lifecycleScope for changing the profile Picture
       lifecycleScope.launch {
-          viewModel.profilePixState.collect(){
-              state -> profilPicture.setImageResource(state.defaultPix)
+          sharedViewModel.profilePix.collect(){
+              newPicture ->
+              if (newPicture != null) {
+                  profilPicture.setImageResource(newPicture)
+              }
           }
       }
+        lifecycleScope.launch{
+            sharedViewModel.randomQuote.collect(){
+                quote -> if (quote != null){
+                    displayTextapi.text = quote
+                }
+            }
+        }
 
         // open another fragment
         profilPicture.setOnClickListener {

@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
-import com.example.endingproject_kotlin.ProfilePix.ProfilePixViewModel
+import com.example.endingproject_kotlin.SharedViewModel.SharedViewModel
 import com.example.endingproject_kotlin.databinding.FragmentProfileIconsBinding
 import com.google.firebase.database.DatabaseReference
 
@@ -17,7 +17,7 @@ class ProfileIconsFragment : Fragment() {
     private var _binding: FragmentProfileIconsBinding?=null
     private val binding get() = _binding!!
 
-    val viewModel: ProfilePixViewModel by activityViewModels()
+    val sharedViewModel:SharedViewModel by activityViewModels()
     private lateinit var db : DatabaseReference
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,13 +42,13 @@ class ProfileIconsFragment : Fragment() {
 
         //update the new image for profile picture
         profilePicTwo.setOnClickListener {
-            viewModel.updateProfilePicture(R.drawable.circle_two)
+            sharedViewModel.updateProfilePicture(R.drawable.circle_two)
         }
         profilePicOne.setOnClickListener {
-            viewModel.updateProfilePicture(R.drawable.circle_one)
+            sharedViewModel.updateProfilePicture(R.drawable.circle_one)
         }
         profilePicThree.setOnClickListener {
-            viewModel.updateProfilePicture(R.drawable.circle_three)
+            sharedViewModel.updateProfilePicture(R.drawable.circle_three)
         }
 
 
