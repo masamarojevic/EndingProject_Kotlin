@@ -6,14 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.get
 import androidx.navigation.Navigation
+import com.example.endingproject_kotlin.CurrentUser.UserViewModel
 import com.example.endingproject_kotlin.Username.UserNameViewModel
 import com.example.endingproject_kotlin.databinding.FragmentLogginBinding
-
 import com.google.firebase.database.*
 
 
@@ -23,9 +21,9 @@ class LogginFragment : Fragment() {
     private var _binding: FragmentLogginBinding?=null
     private val binding get() = _binding!!
     private lateinit var db : DatabaseReference
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(
@@ -37,55 +35,75 @@ class LogginFragment : Fragment() {
         val view = binding.root
 
         val viewModel1: UserNameViewModel by activityViewModels()
+        val userViewModel: UserViewModel by activityViewModels()
 
-        //id
+
         db= FirebaseDatabase.
         getInstance("https://horoscope-f10af-default-rtdb.europe-west1.firebasedatabase.app")
-            .getReference("users")
+           .getReference("users")
 
 
+
+        //id
         var username = binding.etUsername
         val password = binding.etUserPassword
         val btnLog = binding.btnLogIn
         val btnReg = binding.btnUserRegister
 
 
-
+        //button for logging in the user and it is checking in the database if there is a user with same username
+        //if there is it is also checking the password , if the users exist then this user becomes the current user,
+        // with all variables assigned. We are also setting the username to be displayed later with the navigation to the mainpage
         btnLog.setOnClickListener {
+
             val inputUsername = username.text.toString()
             val inputPassword = password.text.toString()
 
-            db.orderByChild("username").equalTo(inputUsername).addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    if(snapshot.exists()){
-                        for (userSnapshot in snapshot.children){
+           db.orderByChild("username").equalTo(inputUsername).addListenerForSingleValueEvent(object : ValueEventListener {
+               override fun onDataChange(snapshot: DataSnapshot) {
+
+                    if(snapshot.exists())
+                   {
+                       for (userSnapshot in snapshot.children){
+
                             val user = userSnapshot.getValue(User::class.java)
+
                             if (user != null && user.password == inputPassword){
+
+                                val currentUser = userSnapshot.key?.let { it1 ->
+
+                                    User(
+                                        username = user.username,
+                                        password =user.password,
+                                        zodiacSign = user.zodiacSign,
+                                        traits = user.traits,
+                                        userId = it1
+                                    )
+                                }
+                               userViewModel.getCurrentUser(currentUser)
+
                                viewModel1.setUsername(user.username)
 
-                               Navigation.findNavController(view).navigate(R.id.action_logginFragment_to_mainPageFragment)
+                                Navigation.findNavController(view).navigate(R.id.action_logginFragment_to_mainPageFragment)
+
                             }else{
-                                Toast.makeText(activity,"wrong username or password,try again",Toast.LENGTH_LONG).show()
-                            }
-                        }
-                    }
-                }
+                               Toast.makeText(activity,"wrong username or password,try again",Toast.LENGTH_LONG).show()
+                           }
+                       }
+                   }
+               }
 
-                override fun onCancelled(error: DatabaseError) {
-                    Toast.makeText(activity,"something went wrong,try again!",Toast.LENGTH_LONG).show()
-                }
-            })
+               override fun onCancelled(error: DatabaseError) {
+                   Toast.makeText(activity,"something went wrong,try again!",Toast.LENGTH_LONG).show()
+               }
+           })
         }
-
 
         btnReg.setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.action_logginFragment_to_registerFragment)
         }
 
-
-
         return view
     }
-
 
 }

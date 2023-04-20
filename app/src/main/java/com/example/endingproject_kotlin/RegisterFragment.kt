@@ -15,7 +15,9 @@ class RegisterFragment : Fragment() {
 
    private var _binding: FragmentRegisterBinding?=null
    private val binding get() = _binding!!
+
     private lateinit var db : DatabaseReference
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -29,13 +31,14 @@ class RegisterFragment : Fragment() {
         _binding=FragmentRegisterBinding.inflate(layoutInflater,container,false)
         val view = binding.root
 
-        //id
-        db = FirebaseDatabase
 
+
+
+        db = FirebaseDatabase
             .getInstance("https://horoscope-f10af-default-rtdb.europe-west1.firebasedatabase.app")
             .getReference("users")
-            .child("zodiac-sign")
 
+        //id
         val etUsername = binding.etRegUsername
         val etPassword = binding.etRegPassword
         val etRePassword = binding.etRegRePassword
@@ -43,45 +46,69 @@ class RegisterFragment : Fragment() {
         val btnNavLogIn = binding.btnNavLogIn
 
 
+        // button for registering a user and cheking if the username ,password is inserted then going in the database
+        //to see if the username already exist, if not then a new user is created  with a new user ID together with other variables
         btnRegister.setOnClickListener {
-            val username = etUsername.text.toString()
-            val password = etPassword.text.toString()
-            val rePassword = etRePassword.text.toString()
-            val newUser = User(username,password)
 
-            db.orderByChild("username").equalTo(username).addListenerForSingleValueEvent(object : ValueEventListener{
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    if(snapshot.exists()){
-                        Toast.makeText(activity,"User already exist, please choose another username",Toast.LENGTH_LONG).show()
-                    }else{ if (password == rePassword){
-                        db.push().setValue(newUser).addOnSuccessListener {
-                            Toast.makeText(activity,"$newUser has been registered successfully",Toast.LENGTH_LONG).show()
-                        }.addOnFailureListener {
-                            Toast.makeText(activity,"Something went wrong, try again!",Toast.LENGTH_LONG).show()
-                        }
+            val username = etUsername.text.toString().trim()
+            val password = etPassword.text.toString().trim()
+            val rePassword = etRePassword.text.toString().trim()
+            val zodiacSign =ZodiacSigns("")
 
-                    }else{
-                        Toast.makeText(activity,"Password not matching, try again!",Toast.LENGTH_LONG).show()
-                    }
+            if(username.isNotEmpty() && password.isNotEmpty() && rePassword.isNotEmpty()){
 
-                    }
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    Toast.makeText(activity,"something went wrong try again!",Toast.LENGTH_LONG).show()
-                }
-            })
+                   if (password == rePassword){
 
 
+
+                       db.orderByChild("username").equalTo(username).addListenerForSingleValueEvent(object :ValueEventListener {
+                           override fun onDataChange(snapshot: DataSnapshot) {
+
+                               if (snapshot.exists()){
+                                   Toast.makeText(activity,"username exist",Toast.LENGTH_LONG).show()
+                               }
+                               else{
+                                   val newUserId = db.push().key
+                                   val newUser =newUserId?.let { User(username, password, zodiacSign = zodiacSign, traits = Traits(listOf(""), listOf("")), userId = it) }
+                                   db.child(newUserId!!).setValue(newUser).addOnSuccessListener {
+
+                                       Toast.makeText(activity,"user registered",Toast.LENGTH_LONG).show()
+
+                                   }.addOnFailureListener{
+
+                                       Toast.makeText(activity,"failed to register",Toast.LENGTH_LONG).show()
+                                   }
+
+                               }
+                           }
+
+                           override fun onCancelled(error: DatabaseError) {
+                               Toast.makeText(activity,"something went wrong! try again",Toast.LENGTH_LONG).show()
+                           }
+
+                       })
+
+                   }else{
+                       Toast.makeText(activity,"password not matching",Toast.LENGTH_LONG).show()}
+            }else{
+
+                Toast.makeText(activity,"fill in the fields",Toast.LENGTH_LONG).show()
+            }
 
         }
+        //after registering user can hop on to login site
         btnNavLogIn.setOnClickListener {
+
             Navigation.findNavController(view).navigate(R.id.action_registerFragment_to_logginFragment2)
+
         }
 
         return view
     }
-
+    override fun onDestroyView(){
+        super.onDestroyView()
+        _binding = null
+    }
 
 }
 

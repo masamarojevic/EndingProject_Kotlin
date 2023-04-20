@@ -7,20 +7,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import com.example.endingproject_kotlin.Api.DailyTextApi
 import com.example.endingproject_kotlin.Api.Dailytext
+import com.example.endingproject_kotlin.CurrentUser.UserViewModel
 import com.example.endingproject_kotlin.ProfilePix.ProfilePixViewModel
-import com.example.endingproject_kotlin.Username.UserNameViewModel
 import com.example.endingproject_kotlin.ZodiacSign.ZodiacSignViewModel
-
 import com.example.endingproject_kotlin.databinding.FragmentMainPageBinding
 import com.google.firebase.database.*
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
@@ -30,7 +27,6 @@ class MainPageFragment : Fragment() {
     private var _binding: FragmentMainPageBinding?=null
     private val binding get() = _binding!!
     private lateinit var db : DatabaseReference
-
 
 
 
@@ -45,52 +41,84 @@ class MainPageFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-       val viewModel1: UserNameViewModel by activityViewModels()
-
 
         _binding = FragmentMainPageBinding.inflate(layoutInflater, container, false)
         val view = binding.root
 
-        //activityViewModels used for sharing the viewmodel
+        val userViewModel :UserViewModel by activityViewModels()
         val viewModel: ProfilePixViewModel by activityViewModels()
-
         val viewModelZodiac: ZodiacSignViewModel by viewModels()
 
 
-        //id
-        db= FirebaseDatabase.
+
+       db= FirebaseDatabase.
         getInstance("https://horoscope-f10af-default-rtdb.europe-west1.firebasedatabase.app")
             .getReference("users")
-            .child("zodiac-sign")
+
 
         //id
-        var profilPicture = binding.ibSelectProfilePix
-        var displayName = binding.tvDisplayText
-        var displayTextapi = binding.tvRandomText
-        var monthInput = binding.etMonthInput
-        var dayInput = binding.etDayInput
-        var btnSubmit = binding.btnSubmit
-        var displaySign = binding.tvZodiacSign
+        val profilPicture = binding.ibSelectProfilePix
+        val displayName = binding.tvDisplayText
+        val displayTextapi = binding.tvRandomText
+        val monthInput = binding.etMonthInput
+        val dayInput = binding.etDayInput
+        val btnSubmit = binding.btnSubmit
+        val displaySign = binding.tvZodiacSign
 
 
-
+        //updating the zodiac sign
         btnSubmit.setOnClickListener {
 
+             val currentUser = userViewModel.currentUser.value
+             val updatedZodiacSign = calculateZodiac(monthInput,dayInput)
+             val updatedTraits = calculateTraits(updatedZodiacSign)
+
+            //current user copies the constructor and becomes an updated user
+             if (currentUser != null ){
+                 val updatedUser = currentUser.copy(zodiacSign = ZodiacSigns(updatedZodiacSign), traits = updatedTraits)
+
+                 //retrieve the current user ID for entering the specific path to which user , when currentUser is found
+                 //we updated that user in database with setValue
+                 val currentUserId = userViewModel.currentUserId.value
+                 if (currentUserId != null) {
+                     FirebaseDatabase.getInstance("https://horoscope-f10af-default-rtdb.europe-west1.firebasedatabase.app")
+                         .getReference("users").child(currentUserId).setValue(updatedUser)
+                         .addOnSuccessListener {  println("updated")  }.addOnFailureListener { println("failed") }
+                 }
+
+                viewModelZodiac.setZodiacSign(updatedZodiacSign)
+
+               //the zodiac with traits for the updated zodiacsign, when non of it is matching return empty list
+                when(updatedZodiacSign){
+                    "capricorn" -> Traits(
+                        listOf("Responsible","disciplined","self-control"),
+                        listOf("Know-it-all","unforgiving","expecting the worst"),
+                         )
+                    "aquarius" -> Traits(
+                         listOf("progressive","original","independent"),
+                         listOf("runs from emotional expression","uncompromising","temperamental"),
+
+                         )
+                    "pisces" -> Traits(
+                       listOf("compassionate","artistic","intuitive"),
+                        listOf("desire to escape reality","fearful","overly trusting"),
+
+                         )
+                    "aries" -> Traits(
+                         listOf("courageous","confident","honest"),
+                         listOf("impatient","moody","impulsive"),
+
+                         )
 
 
-               var zodiacSign
-               = calculateZodiac(monthInput,dayInput)
-          viewModelZodiac.setZodiacSign(zodiacSign)
-
-            db.push().setValue(zodiacSign).addOnSuccessListener {
-                Toast.makeText(activity,"$zodiacSign has been added successfully",Toast.LENGTH_LONG).show()
-            }
-                .addOnFailureListener {
-                    Toast.makeText(activity,"something went wrong",Toast.LENGTH_LONG).show()
+                    else -> Traits(emptyList(), emptyList())
                 }
-        }
 
+             }
 
+           }
+
+        //api
         val retrofit = Retrofit.Builder()
             .baseUrl("https://zenquotes.io/")
             .addConverterFactory(GsonConverterFactory.create())
@@ -116,19 +144,24 @@ class MainPageFragment : Fragment() {
             }
         })
 
+
+        //lifescope for displaying the current users username
+        lifecycleScope.launch{
+            userViewModel.currentUser.collect{
+                currentUser ->
+                if (currentUser != null ){
+                    val username = currentUser.username
+                    displayName.text = username
+                }
+            }
+        }
+
+      //lifescope for displaying zodiac sign
        lifecycleScope.launch{
            viewModelZodiac.zodiacSignUistate.collect{
                state -> displaySign.text = state.zodiacSign
            }
        }
-
-        //lifecycleScope for displaying the username
-        lifecycleScope.launch {
-            viewModel1.usernameUiState.collect { state ->
-                displayName.text = state.username
-            }
-        }
-
 
 
        //lifecycleScope for changing the profile Picture
@@ -138,58 +171,77 @@ class MainPageFragment : Fragment() {
           }
       }
 
-
         // open another fragment
         profilPicture.setOnClickListener {
 
             Navigation.findNavController(view).navigate(R.id.action_mainPageFragment_to_profileIcons)
         }
 
-
-
-
-
         return view
-    }
+    }}
+  private fun calculateTraits(zodiacSign: String): Traits{
+      return when(zodiacSign){
+          "capricorn" -> Traits(
+              positiveTraits = listOf("Responsible", "Disciplined", "Self-control"),
+              negativeTraits = listOf("Know-it-all", "Unforgiving", "Expecting the worst"),
 
+          )
+          "aquarius" -> Traits(
+              positiveTraits = listOf("Progressive", "Original", "Independent"),
+              negativeTraits = listOf("Runs from emotional expression", "Uncompromising", "Temperamental"),
+
+          )
+          "pisces" -> Traits(
+              positiveTraits = listOf("Compassionate", "Artistic", "Intuitive"),
+              negativeTraits = listOf("Desire to escape reality", "Fearful", "Overly trusting"),
+
+          )
+          "aries" -> Traits(
+              positiveTraits = listOf("Courageous", "Confident", "Honest"),
+              negativeTraits = listOf("Impatient", "Moody", "Impulsive"),
+
+          )
+          else -> Traits()
+      }
+  }
 
    private fun calculateZodiac(monthInput: EditText,dayInput:EditText):String{
-        //converting from string to int
-        val month = monthInput.text.toString().toIntOrNull()
-        val day = dayInput.text.toString().toIntOrNull()
+       //converting from string to int
+       val month = monthInput.text.toString().toIntOrNull()
+       val day = dayInput.text.toString().toIntOrNull()
 
         //checking if conversion was fine and if no numeric value was inserted then print out error
-        if (month == null || day == null){
+       if (month == null || day == null){
             println("wrong input try again!")
            return ""
-        }
+       }
 
 
         //all 12 zodiacs
       when (month){
-            1-> return if (day<20) {
+           1-> return if (day<20) {
              "capricorn"
-            }else{
+           }else{
                 "aquarius"
             }
             2-> return if (day<19){
-             "aquarius"
+            "aquarius"
             }else{
               "pisces"
-            }
+           }
             3 -> return if (day<21){
-               "pisces"
+              "pisces"
             }else{
-                "aries"
+               "aries"
             }
             4-> return if (day<20){
               "aries"
             }else{
-              "Taurus"
-            }
+             "Taurus"
+           }
             5-> return if (day<19){
-            "taurus"
-            }else{
+           "taurus"
+           }else{
               "gemini"
             }
             6-> return if (day<20){
@@ -199,45 +251,42 @@ class MainPageFragment : Fragment() {
             }
             7-> return if (day<21){
              "cancer"
-            }else{
-                "leo"
+           }else{
+               "leo"
             }
-            8-> return if (day<22){
+           8-> return if (day<22){
             "leo"
             }else{
                "virgo"
             }
             9-> return if (day<22){
                 "virgo"
-            }else{
+           }else{
                "libra"
             }
             10-> return if (day<22){
             "libra"
-            }else{
+           }else{
                "scorpius"
             }
             11-> return if (day<23){
              "scorpius"
             }else{
                "sagittarius"
-            }
+           }
             12-> return if (day<21){
                 "sagittarius"
             }else{
                "capricorn"
             }
           else -> {
-              println("invalid month or day please try again ")
+             println("invalid input")
           }
 
-        }
+       }
        return ""
-
-
     }
 
 
-    }
 
 
