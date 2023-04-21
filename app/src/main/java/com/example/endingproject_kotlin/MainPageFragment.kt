@@ -10,15 +10,11 @@ import android.widget.EditText
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
-import com.example.endingproject_kotlin.Api.DailyTextApi
-import com.example.endingproject_kotlin.Api.Dailytext
 import com.example.endingproject_kotlin.SharedViewModel.SharedViewModel
 import com.example.endingproject_kotlin.databinding.FragmentMainPageBinding
 import com.google.firebase.database.*
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import retrofit2.*
-import retrofit2.converter.gson.GsonConverterFactory
+
 
 
 class MainPageFragment : Fragment() {
@@ -68,6 +64,7 @@ class MainPageFragment : Fragment() {
         val dayInput = binding.etDayInput
         val btnSubmit = binding.btnSubmit
         val displaySign = binding.tvZodiacSign
+        val btn_userProfile = binding.btnProfile
 
 
         //updating the zodiac sign
@@ -166,6 +163,12 @@ class MainPageFragment : Fragment() {
 
             Navigation.findNavController(view).navigate(R.id.action_mainPageFragment_to_profileIcons)
         }
+
+        btn_userProfile.setOnClickListener {
+            Navigation.findNavController(view).navigate(R.id.action_mainPageFragment_to_profileFragment)
+        }
+
+
 
         return view
     }}

@@ -80,6 +80,7 @@ class LogginFragment : Fragment() {
                                sharedViewModel.getCurrentUser(currentUser)
 
                                sharedViewModel.setUsername(user.username)
+                                user.zodiacSign?.let { it1 -> sharedViewModel.setZodiacSign(it1.zodiac) }
 
                                 Navigation.findNavController(view).navigate(R.id.action_logginFragment_to_mainPageFragment)
 

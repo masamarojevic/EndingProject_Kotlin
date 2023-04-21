@@ -5,10 +5,14 @@ import com.example.endingproject_kotlin.Api.DailyTextApi
 import com.example.endingproject_kotlin.Api.Dailytext
 
 import com.example.endingproject_kotlin.R
+import com.example.endingproject_kotlin.Traits
 import com.example.endingproject_kotlin.User
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.tasks.await
+import com.google.firebase.database.ktx.getValue
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -86,6 +90,19 @@ class SharedViewModel: ViewModel() {
 
     fun setQuoteFetchedStatus(status: Boolean){
         _quoteFetched.value=status
+    }
+
+    val traits = MutableStateFlow<Traits?>(null)
+
+    suspend fun fetchTraits(userId: String){
+        val db = FirebaseDatabase.getInstance("https://horoscope-f10af-default-rtdb.europe-west1.firebasedatabase.app")
+            .getReference("users")
+        val userSnapshot = db.child(userId).get().await()
+
+        val user =userSnapshot.getValue(User::class.java)
+        if(user != null){
+            traits.value = user.traits
+        }
     }
 
 

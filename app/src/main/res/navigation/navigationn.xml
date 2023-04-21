@@ -36,6 +36,9 @@
         <action
             android:id="@+id/action_mainPageFragment_to_profileIcons"
             app:destination="@id/profileIcons" />
+        <action
+            android:id="@+id/action_mainPageFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileIcons"
@@ -45,5 +48,14 @@
         <action
             android:id="@+id/action_profileIcons_to_mainPageFragment"
             app:destination="@id/mainPageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.endingproject_kotlin.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_logginFragment"
+            app:destination="@id/logginFragment" />
     </fragment>
 </navigation>
