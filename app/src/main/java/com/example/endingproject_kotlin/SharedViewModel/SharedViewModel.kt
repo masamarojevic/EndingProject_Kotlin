@@ -1,6 +1,8 @@
 package com.example.endingproject_kotlin.SharedViewModel
 
 
+import android.app.PendingIntent.getActivities
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import com.example.endingproject_kotlin.Api.DailyTextApi
 import com.example.endingproject_kotlin.Api.Dailytext
@@ -86,7 +88,6 @@ class SharedViewModel: ViewModel() {
 
             override fun onFailure(call: Call<Dailytext>, t: Throwable) {
 
-                //print out error todo: toast 404 not found
                 println(t.printStackTrace())
             }
         })

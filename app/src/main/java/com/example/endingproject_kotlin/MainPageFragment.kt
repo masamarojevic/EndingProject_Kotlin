@@ -72,7 +72,7 @@ class MainPageFragment : Fragment() {
 
             //checking if conversion was fine and if no numeric value was inserted then print out error
             if (month == null || day == null){
-               Toast.makeText(activity,"",Toast.LENGTH_LONG).show()
+               Toast.makeText(activity,"You left the field empty",Toast.LENGTH_LONG).show()
                 return ""
             }
 
@@ -175,6 +175,8 @@ class MainPageFragment : Fragment() {
              }
 
            }
+
+
 
         //checking if the quote was fetched
         if (!sharedViewModel.quoteFetched.value){
