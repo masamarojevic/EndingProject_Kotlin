@@ -17,7 +17,7 @@
             android:id="@+id/action_logginFragment_to_mainPageFragment"
             app:destination="@id/mainPageFragment"
 
-          />
+            />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
@@ -58,4 +58,7 @@
             android:id="@+id/action_profileFragment_to_logginFragment"
             app:destination="@id/logginFragment" />
     </fragment>
+    <action
+        android:id="@+id/action_global_mainPageFragment2"
+        app:destination="@id/mainPageFragment" />
 </navigation>

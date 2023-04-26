@@ -1,18 +1,22 @@
 package com.example.endingproject_kotlin
 
 import android.annotation.SuppressLint
+
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import com.example.endingproject_kotlin.SharedViewModel.SharedViewModel
 import com.example.endingproject_kotlin.databinding.FragmentMainPageBinding
 import com.google.firebase.database.*
+
 import kotlinx.coroutines.launch
 
 
@@ -35,19 +39,12 @@ class MainPageFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val sharedViewModel:SharedViewModel by activityViewModels()
-
-        if (!sharedViewModel.quoteFetched.value){
-            sharedViewModel.fetchRandomQuote()
-            sharedViewModel.setQuoteFetchedStatus(true)
-        }
 
         _binding = FragmentMainPageBinding.inflate(layoutInflater, container, false)
         val view = binding.root
 
-
-
-
+        //viewmodel
+        val sharedViewModel:SharedViewModel by activityViewModels()
 
 
 
@@ -65,6 +62,92 @@ class MainPageFragment : Fragment() {
         val btnSubmit = binding.btnSubmit
         val displaySign = binding.tvZodiacSign
         val btn_userProfile = binding.btnProfile
+
+
+        //function to calculate zodiacSign from users input
+       fun calculateZodiac(monthInput: EditText,dayInput:EditText):String{
+            //converting from string to int
+            val month = monthInput.text.toString().toIntOrNull()
+            val day = dayInput.text.toString().toIntOrNull()
+
+            //checking if conversion was fine and if no numeric value was inserted then print out error
+            if (month == null || day == null){
+               Toast.makeText(activity,"",Toast.LENGTH_LONG).show()
+                return ""
+            }
+
+
+            //all 12 zodiacs
+            when (month){
+                1-> return if (day<20) {
+                    "capricorn"
+                }else{
+                    "aquarius"
+                }
+                2-> return if (day<19){
+                    "aquarius"
+                }else{
+                    "pisces"
+                }
+                3 -> return if (day<21){
+                    "pisces"
+                }else{
+                    "aries"
+                }
+                4-> return if (day<20){
+                    "aries"
+                }else{
+                    "Taurus"
+                }
+                5-> return if (day<19){
+                    "taurus"
+                }else{
+                    "gemini"
+                }
+                6-> return if (day<20){
+                    "Gemini"
+                }else{
+                    "cancer"
+                }
+                7-> return if (day<21){
+                    "cancer"
+                }else{
+                    "leo"
+                }
+                8-> return if (day<22){
+                    "leo"
+                }else{
+                    "virgo"
+                }
+                9-> return if (day<22){
+                    "virgo"
+                }else{
+                    "libra"
+                }
+                10-> return if (day<22){
+                    "libra"
+                }else{
+                    "scorpius"
+                }
+                11-> return if (day<23){
+                    "scorpius"
+                }else{
+                    "sagittarius"
+                }
+                12-> return if (day<21){
+                    "sagittarius"
+                }else{
+                    "capricorn"
+                }
+                else -> {
+                    println("invalid input")
+                }
+
+            }
+            return ""
+        }
+
+
 
 
         //updating the zodiac sign
@@ -89,35 +172,15 @@ class MainPageFragment : Fragment() {
 
                 sharedViewModel.setZodiacSign(updatedZodiacSign)
 
-               //the zodiac with traits for the updated zodiacsign, when non of it is matching return empty list
-                when(updatedZodiacSign){
-                    "capricorn" -> Traits(
-                        listOf("Responsible","disciplined","self-control"),
-                        listOf("Know-it-all","unforgiving","expecting the worst"),
-                         )
-                    "aquarius" -> Traits(
-                         listOf("progressive","original","independent"),
-                         listOf("runs from emotional expression","uncompromising","temperamental"),
-
-                         )
-                    "pisces" -> Traits(
-                       listOf("compassionate","artistic","intuitive"),
-                        listOf("desire to escape reality","fearful","overly trusting"),
-
-                         )
-                    "aries" -> Traits(
-                         listOf("courageous","confident","honest"),
-                         listOf("impatient","moody","impulsive"),
-
-                         )
-
-
-                    else -> Traits(emptyList(), emptyList())
-                }
-
              }
 
            }
+
+        //checking if the quote was fetched
+        if (!sharedViewModel.quoteFetched.value){
+            sharedViewModel.fetchRandomQuote()
+            sharedViewModel.setQuoteFetchedStatus(true)
+        }
 
 
 
@@ -150,6 +213,7 @@ class MainPageFragment : Fragment() {
               }
           }
       }
+        //lifecycleScope for random quote text
         lifecycleScope.launch{
             sharedViewModel.randomQuote.collect(){
                 quote -> if (quote != null){
@@ -158,7 +222,7 @@ class MainPageFragment : Fragment() {
             }
         }
 
-        // open another fragment
+        // navigate to another fragment
         profilPicture.setOnClickListener {
 
             Navigation.findNavController(view).navigate(R.id.action_mainPageFragment_to_profileIcons)
@@ -172,6 +236,8 @@ class MainPageFragment : Fragment() {
 
         return view
     }}
+
+//function to receive zodiacSign Traits
   private fun calculateTraits(zodiacSign: String): Traits{
       return when(zodiacSign){
           "capricorn" -> Traits(
@@ -194,91 +260,44 @@ class MainPageFragment : Fragment() {
               negativeTraits = listOf("Impatient", "Moody", "Impulsive"),
 
           )
+          "taurus" -> Traits(
+              positiveTraits = listOf("Reliable","Practical","Patient"),
+              negativeTraits = listOf("Stubborn","Possessive","Uncompromising")
+          )
+          "gemini" -> Traits(
+              positiveTraits = listOf("Gentle","Curious","Adaptable"),
+              negativeTraits = listOf("Nervous","Inconsistent","Indecisive")
+          )
+          "cancer" -> Traits(
+              positiveTraits = listOf("Loyal","Emotional","Highly imaginative"),
+              negativeTraits = listOf("Moody","Pessimistic","Manipulative")
+          )
+          "leo" -> Traits(
+              positiveTraits = listOf("Creative","Generous","Warm-hearted"),
+              negativeTraits = listOf("Arrogant","Stubborn","Inflexible")
+          )
+          "virgo" -> Traits(
+              positiveTraits = listOf("Analytical","Hardworking","Practical"),
+              negativeTraits = listOf("Shy","Overly critical","Serious")
+          )
+          "libra" -> Traits(
+              positiveTraits = listOf("Cooperative","Gracious","Social"),
+              negativeTraits = listOf("Indecisive","Avoiding confrontations","Grudge carrying")
+          )
+          "scorpio" -> Traits(
+              positiveTraits = listOf("Resourceful","Powerful","Brave"),
+              negativeTraits = listOf("Distrusting","Jealous","Manipulative")
+          )
+          "sagittarius" -> Traits(
+              positiveTraits = listOf("Idealistic","Generous","Humorous"),
+              negativeTraits = listOf("Impatient","Blunt","Inconsistent")
+          )
           else -> Traits()
       }
   }
 
-   private fun calculateZodiac(monthInput: EditText,dayInput:EditText):String{
-       //converting from string to int
-       val month = monthInput.text.toString().toIntOrNull()
-       val day = dayInput.text.toString().toIntOrNull()
-
-        //checking if conversion was fine and if no numeric value was inserted then print out error
-       if (month == null || day == null){
-            println("wrong input try again!")
-           return ""
-       }
 
 
-        //all 12 zodiacs
-      when (month){
-           1-> return if (day<20) {
-             "capricorn"
-           }else{
-                "aquarius"
-            }
-            2-> return if (day<19){
-            "aquarius"
-            }else{
-              "pisces"
-           }
-            3 -> return if (day<21){
-              "pisces"
-            }else{
-               "aries"
-            }
-            4-> return if (day<20){
-              "aries"
-            }else{
-             "Taurus"
-           }
-            5-> return if (day<19){
-           "taurus"
-           }else{
-              "gemini"
-            }
-            6-> return if (day<20){
-             "Gemini"
-            }else{
-               "cancer"
-            }
-            7-> return if (day<21){
-             "cancer"
-           }else{
-               "leo"
-            }
-           8-> return if (day<22){
-            "leo"
-            }else{
-               "virgo"
-            }
-            9-> return if (day<22){
-                "virgo"
-           }else{
-               "libra"
-            }
-            10-> return if (day<22){
-            "libra"
-           }else{
-               "scorpius"
-            }
-            11-> return if (day<23){
-             "scorpius"
-            }else{
-               "sagittarius"
-           }
-            12-> return if (day<21){
-                "sagittarius"
-            }else{
-               "capricorn"
-            }
-          else -> {
-             println("invalid input")
-          }
-
-       }
-       return ""
-    }
 
 
 

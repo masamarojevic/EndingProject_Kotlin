@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import com.example.endingproject_kotlin.SharedViewModel.SharedViewModel
 import com.example.endingproject_kotlin.databinding.FragmentMainPageBinding
 import com.example.endingproject_kotlin.databinding.FragmentProfileBinding
@@ -24,9 +25,6 @@ class ProfileFragment : Fragment() {
     private lateinit var db : DatabaseReference
 
 
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -37,13 +35,19 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val sharedViewModel: SharedViewModel by activityViewModels()
+
         _binding = FragmentProfileBinding.inflate(layoutInflater, container, false)
         val view = binding.root
 
+        //database
         db= FirebaseDatabase.
         getInstance("https://horoscope-f10af-default-rtdb.europe-west1.firebasedatabase.app")
             .getReference("users")
+
+        //viewmodel
+        val sharedViewModel: SharedViewModel by activityViewModels()
+
+
 
         //id
         val tv_displayZodiac = binding.tvDisplayProfileZodiac
@@ -51,25 +55,31 @@ class ProfileFragment : Fragment() {
         val tv_displayNegative = binding.tvDisplayNegAttributes
         val btn_deleteUser =binding.btnDeleteUser
         val btn_signOutUser = binding.btnSignOut
+        val btn_homeButton = binding.ibHome
 
+       //global navigation
+        btn_homeButton.setOnClickListener {
+           view->view.findNavController().navigate(R.id.action_global_mainPageFragment2)
+     }
+
+        //delete user
         btn_deleteUser.setOnClickListener {
-
-
             deleteUser(sharedViewModel.currentUserId.value)
-
         }
+        //sign out user
         btn_signOutUser.setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.action_profileFragment_to_logginFragment)
         }
 
 
-        //fetch
+        //fetch traits
         lifecycleScope.launch {
             sharedViewModel.currentUserId.value?.let { userId ->
                 sharedViewModel.fetchTraits(userId)
             }
         }
 
+       //display the pos and neg traits
         lifecycleScope.launch {
             sharedViewModel.traits.collect{
                 traits -> traits?.let {
@@ -79,7 +89,7 @@ class ProfileFragment : Fragment() {
             }
             }
 
-
+       //display zodiacSign
         lifecycleScope.launch{
             sharedViewModel.zodiacSign.collect{ zodiacSign ->
                    if (zodiacSign != null){
@@ -91,12 +101,11 @@ class ProfileFragment : Fragment() {
 
       return view
     }
+    //function for deleting user
     private fun deleteUser(userId:String?){
-        // Navigation.findNavController(view).navigate(R.id.action_profileIcons_to_mainPageFragment)
-
 
         if (userId != null) {
-            println("user id : $userId")
+
             db.child(userId).removeValue().addOnSuccessListener {
                 Toast.makeText(activity, "User deleted successfully", Toast.LENGTH_LONG).show()
                 view?.let { it1 -> Navigation.findNavController(it1).navigate(R.id.action_profileFragment_to_logginFragment) }

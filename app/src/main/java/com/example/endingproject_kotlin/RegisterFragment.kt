@@ -15,7 +15,6 @@ class RegisterFragment : Fragment() {
 
    private var _binding: FragmentRegisterBinding?=null
    private val binding get() = _binding!!
-
     private lateinit var db : DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,8 +29,6 @@ class RegisterFragment : Fragment() {
     ): View? {
         _binding=FragmentRegisterBinding.inflate(layoutInflater,container,false)
         val view = binding.root
-
-
 
 
         db = FirebaseDatabase
@@ -58,7 +55,6 @@ class RegisterFragment : Fragment() {
             if(username.isNotEmpty() && password.isNotEmpty() && rePassword.isNotEmpty()){
 
                    if (password == rePassword){
-
 
 
                        db.orderByChild("username").equalTo(username).addListenerForSingleValueEvent(object :ValueEventListener {

@@ -7,14 +7,14 @@ import com.google.firebase.database.FirebaseDatabase
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var db : DatabaseReference
+//    private lateinit var db : DatabaseReference
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        db = FirebaseDatabase
-            .getInstance("https://horoscope-f10af-default-rtdb.europe-west1.firebasedatabase.app/")
-            .getReference("users")
+//        db = FirebaseDatabase
+//            .getInstance("https://horoscope-f10af-default-rtdb.europe-west1.firebasedatabase.app/")
+//            .getReference("users")
 
     }
 

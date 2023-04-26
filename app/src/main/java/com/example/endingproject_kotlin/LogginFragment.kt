@@ -29,12 +29,15 @@ class LogginFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+
         _binding = FragmentLogginBinding.inflate(layoutInflater, container, false)
         val view = binding.root
 
+        //viewmodel
         val sharedViewModel: SharedViewModel by activityViewModels()
 
-
+        //database
         db= FirebaseDatabase.
         getInstance("https://horoscope-f10af-default-rtdb.europe-west1.firebasedatabase.app")
            .getReference("users")

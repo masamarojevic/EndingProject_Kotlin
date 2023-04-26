@@ -13,60 +13,155 @@
 
         <ImageButton
             android:id="@+id/ib_choiceTwo"
-            android:background="@drawable/circle_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="244dp"
             android:adjustViewBounds="true"
+            android:background="@drawable/circle_button"
             android:maxWidth="100dp"
             android:maxHeight="100dp"
             android:scaleType="fitCenter"
             android:src="@drawable/circle_two"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/icon_cancel"
-            android:layout_width="63dp"
-            android:layout_height="61dp"
-            android:src="@drawable/baseline_cancel_24"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.259"
-            android:tint="@color/white"/>
-
         <ImageButton
             android:id="@+id/ib_choiseOne"
-            android:background="@drawable/circle_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="244dp"
             android:adjustViewBounds="true"
+            android:background="@drawable/circle_button"
             android:maxWidth="100dp"
             android:maxHeight="100dp"
             android:scaleType="fitCenter"
             android:src="@drawable/circle_one"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/ib_choiceTwo"
+            app:layout_constraintHorizontal_bias="0.567"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
             android:id="@+id/ib_choiceThree"
-            android:background="@drawable/circle_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="244dp"
             android:adjustViewBounds="true"
+            android:background="@drawable/circle_button"
             android:maxWidth="100dp"
             android:maxHeight="100dp"
             android:scaleType="fitCenter"
             android:src="@drawable/circle_three"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.434"
             app:layout_constraintStart_toEndOf="@+id/ib_choiceTwo"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/ib_choiceFour"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/circle_button"
+            android:maxWidth="100dp"
+            android:maxHeight="100dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/flower_of_life_7230983_1920"
+            app:layout_constraintEnd_toStartOf="@+id/ib_choiceFive"
+            app:layout_constraintHorizontal_bias="0.571"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ib_choiseOne" />
+
+        <ImageButton
+            android:id="@+id/ib_choiceSix"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/circle_button"
+            android:maxWidth="100dp"
+            android:maxHeight="100dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/mandala_4462495"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.428"
+            app:layout_constraintStart_toEndOf="@+id/ib_choiceFive"
+            app:layout_constraintTop_toBottomOf="@+id/ib_choiceThree" />
+
+        <ImageButton
+            android:id="@+id/ib_choiceFive"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/circle_button"
+            android:maxWidth="100dp"
+            android:maxHeight="100dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/mandala_7008967_1920"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ib_choiceTwo" />
+
+        <ImageButton
+            android:id="@+id/ib_choiceSeven"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/circle_button"
+            android:maxWidth="100dp"
+            android:maxHeight="100dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/rosette_7699737_1920"
+            app:layout_constraintEnd_toStartOf="@+id/ib_choiceEight"
+            app:layout_constraintHorizontal_bias="0.571"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ib_choiceFour" />
+
+        <ImageButton
+            android:id="@+id/ib_choiceEight"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/circle_button"
+            android:maxWidth="100dp"
+            android:maxHeight="100dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/mandala_1309911_1920"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ib_choiceFive" />
+
+        <ImageButton
+            android:id="@+id/ib_choiceNine"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/circle_button"
+            android:maxWidth="100dp"
+            android:maxHeight="100dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/colorful_1360007"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.428"
+            app:layout_constraintStart_toEndOf="@+id/ib_choiceEight"
+            app:layout_constraintTop_toBottomOf="@+id/ib_choiceSix" />
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/cinzel"
+            android:text="Choose your profile icon"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/ib_choiceTwo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.76" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
